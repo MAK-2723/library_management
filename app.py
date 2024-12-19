@@ -6,14 +6,14 @@ from database import execute_query
 app=Flask(__name__)
 
 #Middleware for Authentication
-"""@app.before_request
+@app.before_request
 def authenticate():
     exempt_endpoints = ['/login']
     if request.endpoint not in exempt_endpoints:
         token=request.headers.get('Authorization')
         if not token or not verify_token(token):
             return jsonify({"error":"Unauthorized"}), 401
-"""
+            
 #User Login
 @app.route('/login',methods=['POST'])
 def login():
