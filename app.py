@@ -17,7 +17,7 @@ def authenticate():
 #User Login
 @app.route('/login',methods=['POST'])
 def login():
-    data=request.get_json()
+    data=request.json
     user=execute_query("SELECT id,password FROM members WHERE email=?",(data['email'],),fetchone=True)
     #Check if user exists
     if not user:
@@ -38,14 +38,14 @@ def books():
         return jsonify(books)
     
     if request.method=='POST':
-        data=request.get_json()
+        data=request.json
         execute_query("INSERT INTO books (title,author,published_date,pages) VALUES (?,?,?,?)",(data['title'],data['author'],data['published_date'],data['pages']))
         return jsonify({"message":"Book added successfully"}), 201
     
 @app.route('/books/<int:book_id>',methods=['PUT','DELETE'])
 def manage_book(book_id):
     if request.method=='PUT':
-        data=request.get_json()
+        data=request.json
         execute_query("UPDATE books SET title=? author=? published_date=? pages=? WHERE id=?",(data['title'],data['author'],data['published_date'],data['pages'],book_id))
         return jsonify({"message":"Book updated successfully"})
     
@@ -60,14 +60,14 @@ def members():
         members=execute_query("SELECT id,name,email FROM members",fetchall=True)
         return jsonify(members)
     if request.method=='POST':
-        data=request.get_json()
+        data=request.json
         execute_query("INSERT INTO members (name,email,password) VALUES (?,?,?)",(data['name'],data['email'],data['password']))
         return jsonify({"message":"Book added successfully"}), 201
     
 @app.route('/members/<int:member_id>',methods=['PUT','DELETE'])
 def manage_member(member_id):
     if request.method=='PUT':
-        data=request.get_json()
+        data=request.json
         execute_query("UPDATE members SET name=? email=? password=? WHERE id=?",(data['name'],data['email'],data['password'],member_id))
         return jsonify({"message":"Member updated successfully"})
     
@@ -77,5 +77,4 @@ def manage_member(member_id):
 
 if __name__=="__main__":
     init_db()
-    #execute_query("INSERT INTO members (name,email,password) Values ('Test User','test@example.com','password123')")
     app.run(debug=True)
